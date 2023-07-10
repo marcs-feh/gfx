@@ -1,0 +1,8 @@
+gfx
+*.bin
+*.a
+*.lib
+*.so
+*.dll
+*.dynlib
+*.exe

@@ -12,6 +12,7 @@ Gfx_Context :: struct {
 	width: uint,
 	height: uint,
 	scale: f32,
+	frame_counter: uint,
 }
 
 init_sdl :: proc(){
@@ -51,6 +52,7 @@ gfx_context_make :: proc(using cv: Canvas, scale: f32 = 1.0) -> ^Gfx_Context {
 		texture = texture,
 		width = auto_cast sc_width,
 		height = auto_cast sc_height,
+		frame_counter = 0,
 	}
 	return ctx
 }
@@ -67,5 +69,6 @@ render :: proc(using ctx: ^Gfx_Context, cv: ^Canvas){
 	sdl.RenderCopy(renderer, texture, nil, nil)
 	sdl.RenderPresent(renderer)
 	sdl.RenderClear(renderer)
+	ctx.frame_counter += 1
 }
 

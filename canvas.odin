@@ -4,9 +4,8 @@ Color :: u32
 
 Canvas :: struct {
 	pixels: []Color,
-	height: uint,
-	width: uint,
-	frame_counter: uint,
+	height: int,
+	width: int,
 }
 
 rgba_from_col :: proc(c: Color) -> (r,g,b,a:u8) {
@@ -23,7 +22,7 @@ col_from_rgba :: proc(r,g,b:u8, a: u8=0xff) -> Color {
 	return c
 }
 
-canvas_make :: proc(width, height: uint) -> Canvas {
+canvas_make :: proc(width, height: int) -> Canvas {
 	cv := Canvas {
 		height = height,
 		width = width,
@@ -44,6 +43,15 @@ canvas_clear :: proc(using cv: ^Canvas){
 
 	for i := 0; i < n; i += 1 { ptr[i] = black }
 	for i := 0; i < rest; i += 1 { pixels[i] = black }
+}
+
+screen_to_canvas_coord :: proc (using cv: ^Canvas, sx, sy: int, scale: f32 = 1) -> (int, int) {
+	sx : int = auto_cast (f32(sx) / scale)
+	sy : int = auto_cast (f32(sy) / scale)
+	x := sx - (width / 2)
+	y := (height / 2) - sy
+
+	return x, y
 }
 
 @(private="file")

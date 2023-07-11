@@ -1,43 +1,41 @@
 package gfx
 
 import "core:fmt"
+import "core:time"
+
 import sdl "vendor:sdl2"
 
+WIDTH: uint : 400
+HEIGHT: uint  : 300
+SCALE: f32 : 3.0
+
 main :: proc(){
-}
+	init_sdl()
+	defer quit_sdl()
 
+	canvas := canvas_make(WIDTH, HEIGHT)
+	defer canvas_destroy(&canvas)
 
-Gfx_Context :: struct {
-	window: ^sdl.Window,
-	renderer: ^sdl.Renderer,
-	texture: ^sdl.Texture,
-	width: int,
-	height: int,
-}
+	ctx := gfx_context_make(canvas, 2.0)
+	defer gfx_context_destroy(ctx)
 
-init_lib :: proc(width, height: int) -> ^Gfx_Context {
-	ok := sdl.Init({.VIDEO}) != 0
-	if !ok { return nil }
+	
+	running := true
 
-	w : i32 = auto_cast width
-	h : i32 = auto_cast height
-	x :: sdl.WINDOWPOS_CENTERED
-	y :: x
-
-	window := sdl.CreateWindow("TODO: add title", x, y, w, h, nil);
-	if window == nil { return nil }
-
-	renderer := sdl.CreateRenderer(window, -1, nil);
-	if renderer == nil { return nil }
-
-	ctx := new(Gfx_Context)
-	ctx^ = Gfx_Context{
-	window = window,
-	renderer = renderer,
-	width = width,
-	height = height,
+	ev : sdl.Event
+	i := 1
+	for running {
+		canvas_clear(&canvas)
+		for sdl.PollEvent(&ev) {
+			#partial switch ev.type {
+				case .QUIT: running = false
+			}
+		}
+		canvas.pixels[i % len(canvas.pixels)] = 0xff00_0000
+		i += 1
+		render(ctx, &canvas);
+		time.sleep(20 * time.Millisecond)
 	}
-	return ctx
+
 }
 
-deinit_lib :: proc(ctx: ^Gfx_Context){}

@@ -2,6 +2,13 @@ package gfx
 
 Color :: u32
 
+Canvas :: struct {
+	pixels: []Color,
+	height: uint,
+	width: uint,
+	frame_counter: uint,
+}
+
 rgba_from_col :: proc(c: Color) -> (r,g,b,a:u8) {
 	r = u8((c & 0xff000000) >> 24)
 	g = u8((c & 0x00ff0000) >> 16)
@@ -14,12 +21,6 @@ rgba_from_col :: proc(c: Color) -> (r,g,b,a:u8) {
 col_from_rgba :: proc(r,g,b:u8, a: u8=0xff) -> Color {
 	c: Color = (u32(r) << 24) | (u32(g) << 16) | (u32(b) << 8) | u32(a)
 	return c
-}
-
-Canvas :: struct {
-	pixels: []Color,
-	height: uint,
-	width: uint,
 }
 
 canvas_make :: proc(width, height: uint) -> Canvas {

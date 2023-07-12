@@ -5,6 +5,7 @@ Camera :: struct {
 	vp_width:    Real,
 	vp_height:   Real,
 	vp_distance: Real,
+	view_distance: Real,
 }
 
 canvas_to_viewport :: proc(cam: Camera, canvas: Canvas, canvas_coord: Vec2i) -> Vec3 {
@@ -21,4 +22,8 @@ ray_equation :: proc(origin: Vec3, vp_point: Vec3, t: Real) -> Vec3 {
 	d := vp_point - origin
 	p := origin + (t * d)
 	return p
+}
+
+trace_ray :: proc(cam: Camera, dir: Vec3, t_min, t_max: Real) -> Color {
+	return col_from_rgba(100, 100, 100)
 }

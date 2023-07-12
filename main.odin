@@ -20,7 +20,13 @@ main :: proc() {
 		vp_width = 1,
 		vp_height = 1,
 		vp_distance = 1,
+		view_distance = 1_000_000,
 	}
+	canvas := canvas_make(WIDTH, HEIGHT)
+	defer canvas_destroy(&canvas)
+
+	scene := scene_make();
+	defer scene_destroy(&scene)
 
 	clock: time.Stopwatch
 	time.stopwatch_start(&clock)
@@ -28,9 +34,6 @@ main :: proc() {
 
 	init_sdl()
 	defer quit_sdl()
-
-	canvas := canvas_make(WIDTH, HEIGHT)
-	defer canvas_destroy(&canvas)
 
 	ctx := gfx_context_make(canvas, SCALE)
 	defer gfx_context_destroy(ctx)

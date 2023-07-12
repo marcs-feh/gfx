@@ -16,6 +16,7 @@ Vec4i :: [4]int
 Sphere :: struct {
 	o: Vec3,
 	r: Real,
+	color: Color,
 }
 
 when PRECISION_BITS == 64 {
@@ -34,33 +35,40 @@ when PRECISION_BITS == 64 {
 	#assert(false, "PRECISION_BITS must be either: 16, 32, 64")
 }
 
-mag :: proc { mag_v2, mag_v3, mag_v4 }
-distance :: proc{ distance_v2, distance_v3, distance_v4 }
+mag :: proc {
+	mag_v2,
+	mag_v3,
+	mag_v4,
+}
+distance :: proc {
+	distance_v2,
+	distance_v3,
+	distance_v4,
+}
 
-mag_v2 :: proc(v: Vec2) -> Real{
+mag_v2 :: proc(v: Vec2) -> Real {
 	sq := v * v
 	return math.sqrt(sq.x + sq.y)
 }
 
-mag_v3 :: proc(v: Vec3) -> Real{
+mag_v3 :: proc(v: Vec3) -> Real {
 	sq := v * v
 	return math.sqrt(sq.x + sq.y + sq.z)
 }
 
-mag_v4 :: proc(v: Vec4) -> Real{
+mag_v4 :: proc(v: Vec4) -> Real {
 	sq := v * v
 	return math.sqrt(sq.x + sq.y + sq.z + sq.w)
 }
 
-distance_v2 :: proc(a, b:Vec2) -> Real {
-	return mag(a-b)
+distance_v2 :: proc(a, b: Vec2) -> Real {
+	return mag(a - b)
 }
 
-distance_v3 :: proc(a, b:Vec3) -> Real {
-	return mag(a-b)
+distance_v3 :: proc(a, b: Vec3) -> Real {
+	return mag(a - b)
 }
 
-distance_v4 :: proc(a, b:Vec4) -> Real {
-	return mag(a-b)
+distance_v4 :: proc(a, b: Vec4) -> Real {
+	return mag(a - b)
 }
-

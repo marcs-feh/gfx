@@ -1,6 +1,7 @@
 package gfx
 
 import "core:fmt"
+import str "core:strings"
 import sdl "vendor:sdl2"
 
 sdl_initialized := false
@@ -30,7 +31,7 @@ quit_sdl :: proc() {
 
 
 // @(private="file")
-gfx_context_make :: proc(using cv: Canvas, scale: f32 = 1.0) -> ^Gfx_Context {
+gfx_context_make :: proc(using cv: Canvas, title: string, scale: f32 = 1.0) -> ^Gfx_Context {
 	assert(sdl_initialized, "SDL is not initialized")
 
 	sc_width: i32 = auto_cast (f32(width) * scale)
@@ -38,7 +39,9 @@ gfx_context_make :: proc(using cv: Canvas, scale: f32 = 1.0) -> ^Gfx_Context {
 
 	p :: sdl.WINDOWPOS_UNDEFINED
 
-	window := sdl.CreateWindow("TODO: title", p, p, sc_width, sc_height, nil)
+	ctitle := str.clone_to_cstring(title)
+	defer delete(ctitle)
+	window := sdl.CreateWindow(ctitle, p, p, sc_width, sc_height, nil)
 	assert(window != nil, "Failed to create window")
 	renderer := sdl.CreateRenderer(window, -1, nil)
 	assert(window != nil, "Failed to create renderer")
@@ -49,7 +52,7 @@ gfx_context_make :: proc(using cv: Canvas, scale: f32 = 1.0) -> ^Gfx_Context {
 		auto_cast width,
 		auto_cast height,
 	)
-	assert(window != nil, "Failed to create texture")
+	assert(texture != nil, "Failed to create texture")
 
 	ctx := new(Gfx_Context)
 	ctx^ = Gfx_Context {

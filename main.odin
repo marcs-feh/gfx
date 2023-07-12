@@ -25,7 +25,7 @@ main :: proc() {
 	canvas := canvas_make(WIDTH, HEIGHT)
 	defer canvas_destroy(&canvas)
 
-	scene := scene_make()
+	scene := scene_make(0x00000000)
 	defer scene_destroy(&scene)
 	// Add shapes
 	scene_add(&scene,
@@ -71,7 +71,7 @@ main :: proc() {
 	init_sdl()
 	defer quit_sdl()
 
-	ctx := gfx_context_make(canvas, SCALE)
+	ctx := gfx_context_make(canvas, "Raytrace ma balls", SCALE)
 	defer gfx_context_destroy(ctx)
 
 	ev: sdl.Event

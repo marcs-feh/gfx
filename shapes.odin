@@ -14,8 +14,8 @@ Vec3i :: [3]int
 Vec4i :: [4]int
 
 Sphere :: struct {
-	o: Vec3,
-	r: Real,
+	origin: Vec3,
+	radius: Real,
 	color: Color,
 }
 
@@ -35,6 +35,17 @@ when PRECISION_BITS == 64 {
 	#assert(false, "PRECISION_BITS must be either: 16, 32, 64")
 }
 
+solve_quadratic :: proc(a, b, c: $T) -> Maybe([2]T) {
+	if a == 0 {return nil}
+	delta := (b * b) - (4 * a * c)
+	if delta < 0 {return nil}
+
+	s0 := ((-b) + math.sqrt(delta)) / (2 * a)
+	s1 := ((-b) - math.sqrt(delta)) / (2 * a)
+
+	return [2]Real{s0, s1}
+}
+
 mag :: proc {
 	mag_v2,
 	mag_v3,
@@ -44,6 +55,11 @@ distance :: proc {
 	distance_v2,
 	distance_v3,
 	distance_v4,
+}
+dot_product :: proc {
+	dot_product_v2,
+	dot_product_v3,
+	dot_product_v4,
 }
 
 mag_v2 :: proc(v: Vec2) -> Real {
@@ -59,6 +75,21 @@ mag_v3 :: proc(v: Vec3) -> Real {
 mag_v4 :: proc(v: Vec4) -> Real {
 	sq := v * v
 	return math.sqrt(sq.x + sq.y + sq.z + sq.w)
+}
+
+dot_product_v2 :: proc(a, b: Vec2) -> Real {
+	p := a * b
+	return p.x + p.y
+}
+
+dot_product_v3 :: proc(a, b: Vec3) -> Real {
+	p := a * b
+	return p.x + p.y + p.z
+}
+
+dot_product_v4 :: proc(a, b: Vec4) -> Real {
+	p := a * b
+	return p.x + p.y + p.z + p.w
 }
 
 distance_v2 :: proc(a, b: Vec2) -> Real {

@@ -14,3 +14,11 @@ scene_make :: proc() -> Scene {
 scene_destroy :: proc(sc: ^Scene) {
 	delete(sc.spheres)
 }
+
+scene_add :: proc { scene_add_sphere }
+
+scene_add_sphere :: proc(sc: ^Scene, spheres: ..Sphere){
+	for sphere in spheres {
+		append(&sc.spheres, sphere)
+	}
+}

@@ -6,7 +6,7 @@ import "core:time"
 
 import sdl "vendor:sdl2"
 
-WIDTH: int : 400
+WIDTH: int : 300
 HEIGHT: int : 300
 SCALE: f32 : 2
 
@@ -20,13 +20,30 @@ main :: proc() {
 		vp_width = 1,
 		vp_height = 1,
 		vp_distance = 1,
-		view_distance = 1_000_000,
+		view_distance = 100_000,
 	}
 	canvas := canvas_make(WIDTH, HEIGHT)
 	defer canvas_destroy(&canvas)
 
-	scene := scene_make();
+	scene := scene_make()
 	defer scene_destroy(&scene)
+	scene_add(&scene,
+		Sphere{
+			origin = {0, -1, 3},
+			radius = 1,
+			color = col_from_rgba(200, 20, 20),
+		},
+		Sphere{
+			origin = {2, 0, 4},
+			radius = 1,
+			color = col_from_rgba(20, 200, 20),
+		},
+		Sphere{
+			origin = {-2, 0, 4},
+			radius = 1,
+			color = col_from_rgba(20, 20, 200),
+		},
+	)
 
 	clock: time.Stopwatch
 	time.stopwatch_start(&clock)
@@ -67,9 +84,17 @@ main :: proc() {
 		if !paused {
 			start := time.stopwatch_duration(clock)
 			rgba :: col_from_rgba
-			{ 	// Draw Calls
-				draw_line(cv, {0, 0}, mouse_pos, rgba(255, 120, 120))
+			cw, ch := canvas.width, canvas.height
+			{
+				for x in -(cw/2)..=(cw/2) {
+					for y in -(ch/2)..=(ch/2) {
+						dir := canvas_to_viewport(camera, canvas, {x, y})
+						col := trace_ray(camera, scene, dir, camera.vp_distance, camera.view_distance)
+						put_pixel(cv, x, y, col)
+					}
+				}
 			}
+
 			present_canvas(ctx, &canvas)
 			end := time.stopwatch_duration(clock)
 			elapsed := end - start
@@ -81,6 +106,7 @@ main :: proc() {
 				f64(elapsed) / f64(time.Millisecond),
 			)
 			time.sleep(wait)
+			paused = true
 		}
 	}
 }

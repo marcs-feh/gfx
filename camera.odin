@@ -51,10 +51,6 @@ ray_sphere_intersect :: proc(cam: Camera, direction: Vec3, sphere: Sphere) -> (t
 }
 
 
-between :: proc(floor, x, ceil: $T) -> bool {
-	return (x <= ceil) && (x >= floor)
-}
-
 trace_ray :: proc(cam: Camera, scene: Scene, dir: Vec3, t_min, t_max: Real) -> Color {
 	closest_t := cam.view_distance + 1
 	closest_sphere: ^Sphere
@@ -72,8 +68,12 @@ trace_ray :: proc(cam: Camera, scene: Scene, dir: Vec3, t_min, t_max: Real) -> C
 	}
 
 	if closest_sphere == nil {
-		return col_from_rgba(0,0,0)
+		return scene.background
 	}
 
-	return closest_sphere.color
+	// return closest_sphere.color
+	intersection := cam.position + (closest_t * dir)
+	normal := sphere_normal(closest_sphere^, intersection)
+	lum := compute_diffuse_light(intersection, normal, scene.lights[:])
+	return apply_light(closest_sphere.color, lum)
 }

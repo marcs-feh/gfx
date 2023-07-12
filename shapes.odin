@@ -62,6 +62,23 @@ dot_product :: proc {
 	dot_product_v4,
 }
 
+clamp :: proc(floor, x, ceil: $T) -> T {
+	switch true {
+	case x < floor: return floor
+	case x > ceil: return ceil
+	}
+	return x
+}
+
+between :: proc(floor, x, ceil: $T) -> bool {
+	return (x <= ceil) && (x >= floor)
+}
+
+// where sp is a point on the surface of the sphere
+sphere_normal :: proc(sphere: Sphere, sp: Vec3) -> Vec3 {
+	return (sp - sphere.origin) / (mag(sp) - mag(sphere.origin))
+}
+
 mag_v2 :: proc(v: Vec2) -> Real {
 	sq := v * v
 	return math.sqrt(sq.x + sq.y)

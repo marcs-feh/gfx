@@ -6,9 +6,9 @@ import "core:time"
 
 import sdl "vendor:sdl2"
 
-WIDTH: int : 300
-HEIGHT: int : 300
-SCALE: f32 : 2
+WIDTH: int : 600
+HEIGHT: int : 600
+SCALE: f32 : 1
 
 main :: proc() {
 	running := true
@@ -20,28 +20,47 @@ main :: proc() {
 		vp_width = 1,
 		vp_height = 1,
 		vp_distance = 1,
-		view_distance = 100_000,
+		view_distance = 100_000_000,
 	}
 	canvas := canvas_make(WIDTH, HEIGHT)
 	defer canvas_destroy(&canvas)
 
 	scene := scene_make()
 	defer scene_destroy(&scene)
+	// Add shapes
 	scene_add(&scene,
 		Sphere{
 			origin = {0, -1, 3},
 			radius = 1,
-			color = col_from_rgba(200, 20, 20),
+			color = col_from_rgba(0xff, 0x00, 0x00),
 		},
 		Sphere{
 			origin = {2, 0, 4},
 			radius = 1,
-			color = col_from_rgba(20, 200, 20),
+			color = col_from_rgba(0x00, 0xff, 0x00),
 		},
 		Sphere{
 			origin = {-2, 0, 4},
 			radius = 1,
-			color = col_from_rgba(20, 20, 200),
+			color = col_from_rgba(0x00, 0x00, 0xff),
+		},
+		Sphere{
+			origin = {0, -5001, 0},
+			radius = 5000,
+			color = col_from_rgba(0xff, 0xff, 0x00),
+		},
+	)
+	scene_add(&scene,
+		Ambient_Light{
+			intensity = 0.1,
+		},
+		Direction_Light{
+			direction = Vec3{1, 4, 4},
+			intensity = 0.2,
+		},
+		Point_Light{
+			position = Vec3{2, 3, 0},
+			intensity = 0.6,
 		},
 	)
 

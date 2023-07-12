@@ -28,40 +28,18 @@ main :: proc() {
 	scene := scene_make(0x00000000)
 	defer scene_destroy(&scene)
 	// Add shapes
-	scene_add(&scene,
-		Sphere{
-			origin = {0, -1, 3},
-			radius = 1,
-			color = col_from_rgba(0xff, 0x00, 0x00),
-		},
-		Sphere{
-			origin = {2, 0, 4},
-			radius = 1,
-			color = col_from_rgba(0x00, 0xff, 0x00),
-		},
-		Sphere{
-			origin = {-2, 0, 4},
-			radius = 1,
-			color = col_from_rgba(0x00, 0x00, 0xff),
-		},
-		Sphere{
-			origin = {0, -5001, 0},
-			radius = 5000,
-			color = col_from_rgba(0xff, 0xff, 0x00),
-		},
+	scene_add(
+		&scene,
+		Sphere{origin = {0, -1, 3}, radius = 1, color = col_from_rgba(0xff, 0x00, 0x00)},
+		Sphere{origin = {2, 0, 4}, radius = 1, color = col_from_rgba(0x00, 0xff, 0x00)},
+		Sphere{origin = {-2, 0, 4}, radius = 1, color = col_from_rgba(0x00, 0x00, 0xff)},
+		Sphere{origin = {0, -5001, 0}, radius = 5000, color = col_from_rgba(0xff, 0xff, 0x00)},
 	)
-	scene_add(&scene,
-		Ambient_Light{
-			intensity = 0.1,
-		},
-		Direction_Light{
-			direction = Vec3{1, 4, 4},
-			intensity = 0.2,
-		},
-		Point_Light{
-			position = Vec3{2, 3, 0},
-			intensity = 0.6,
-		},
+	scene_add(
+		&scene,
+		Ambient_Light{intensity = 0.1},
+		Direction_Light{direction = Vec3{1, 4, 4}, intensity = 0.2},
+		Point_Light{position = Vec3{2, 3, 0}, intensity = 0.6},
 	)
 
 	clock: time.Stopwatch
@@ -79,18 +57,24 @@ main :: proc() {
 		cv := &canvas
 		canvas_clear(&canvas)
 		for sdl.PollEvent(&ev) {
-				N : Real : 0.02
+			N: Real : 0.02
 			#partial switch ev.type {
 			case .QUIT:
 				running = false
 			case .KEYDOWN:
 				#partial switch ev.key.keysym.sym {
-				case .h: camera.position.x -= N; paused = false
-				case .l: camera.position.x += N; paused = false
-				case .j: camera.position.y -= N; paused = false
-				case .k: camera.position.y += N; paused = false
-				case .b: camera.position.z -= N; paused = false
-				case .f: camera.position.z += N; paused = false
+				case .h:
+					camera.position.x -= N;paused = false
+				case .l:
+					camera.position.x += N;paused = false
+				case .j:
+					camera.position.y -= N;paused = false
+				case .k:
+					camera.position.y += N;paused = false
+				case .b:
+					camera.position.z -= N;paused = false
+				case .f:
+					camera.position.z += N;paused = false
 				case .q:
 					running = false
 				case .SPACE:
@@ -112,10 +96,16 @@ main :: proc() {
 			rgba :: col_from_rgba
 			cw, ch := canvas.width, canvas.height
 			{
-				for x in -(cw/2)..=(cw/2) {
-					for y in -(ch/2)..=(ch/2) {
+				for x in -(cw / 2) ..= (cw / 2) {
+					for y in -(ch / 2) ..= (ch / 2) {
 						dir := canvas_to_viewport(camera, canvas, {x, y})
-						col := trace_ray(camera, scene, dir, camera.vp_distance, camera.view_distance)
+						col := trace_ray(
+							camera,
+							scene,
+							dir,
+							camera.vp_distance,
+							camera.view_distance,
+						)
 						put_pixel(cv, x, y, col)
 					}
 				}

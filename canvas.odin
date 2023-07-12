@@ -32,7 +32,10 @@ rgba_from_col_real :: proc(c: Color) -> (r, g, b, a: Real) {
 	return
 }
 
-col_from_rgba :: proc {col_from_rgba_u8, col_from_rgba_real}
+col_from_rgba :: proc {
+	col_from_rgba_u8,
+	col_from_rgba_real,
+}
 
 col_from_rgba_real :: proc(r, g, b: Real, a: Real = 1.0) -> Color {
 	r_s := r * 255
@@ -41,10 +44,10 @@ col_from_rgba_real :: proc(r, g, b: Real, a: Real = 1.0) -> Color {
 	a_s := a * 255
 
 	return col_from_rgba_u8(
-		auto_cast	math.trunc(r_s),
-		auto_cast	math.trunc(g_s),
-		auto_cast	math.trunc(b_s),
-		auto_cast	math.trunc(a_s),
+		auto_cast math.trunc(r_s),
+		auto_cast math.trunc(g_s),
+		auto_cast math.trunc(b_s),
+		auto_cast math.trunc(a_s),
 	)
 
 

@@ -3,7 +3,7 @@ package gfx
 import "core:math"
 
 Point_Light :: struct {
-	position: Vec3,
+	position:  Vec3,
 	intensity: Real,
 }
 
@@ -17,7 +17,9 @@ Ambient_Light :: struct {
 }
 
 Light_Source :: union {
-	Point_Light, Ambient_Light, Direction_Light,
+	Point_Light,
+	Ambient_Light,
+	Direction_Light,
 }
 
 apply_light :: proc(c: Color, lum: Real) -> Color {
@@ -28,8 +30,13 @@ apply_light :: proc(c: Color, lum: Real) -> Color {
 	return col_from_rgba(lr, lg, lb, a)
 }
 
-@(private="file")
-compute_diffuse_light_intensity :: proc(point: Vec3, normal: Vec3, direction: Vec3, intensity: Real) -> Real {
+@(private = "file")
+compute_diffuse_light_intensity :: proc(
+	point: Vec3,
+	normal: Vec3,
+	direction: Vec3,
+	intensity: Real,
+) -> Real {
 	prod := dot_product(direction, normal)
 	if prod > 0 {
 		return intensity * prod / (mag(normal) * mag(direction))
@@ -38,16 +45,17 @@ compute_diffuse_light_intensity :: proc(point: Vec3, normal: Vec3, direction: Ve
 }
 
 compute_diffuse_light :: proc(point: Vec3, normal: Vec3, sources: []Light_Source) -> Real {
-	lum : Real
+	lum: Real
 
 	for source in sources {
 		switch light in source {
 		case Ambient_Light:
 			lum += light.intensity
-		case Point_Light:{
-			direction := point - light.position
-			lum += compute_diffuse_light_intensity(point, normal, direction, light.intensity)
-		}
+		case Point_Light:
+			{
+				direction := point - light.position
+				lum += compute_diffuse_light_intensity(point, normal, direction, light.intensity)
+			}
 		case Direction_Light:
 			lum += compute_diffuse_light_intensity(point, normal, light.direction, light.intensity)
 		}
@@ -55,4 +63,3 @@ compute_diffuse_light :: proc(point: Vec3, normal: Vec3, sources: []Light_Source
 
 	return lum
 }
-

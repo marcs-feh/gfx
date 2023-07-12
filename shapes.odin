@@ -16,7 +16,7 @@ Vec4i :: [4]int
 Sphere :: struct {
 	origin: Vec3,
 	radius: Real,
-	color: Color,
+	color:  Color,
 }
 
 when PRECISION_BITS == 64 {
@@ -64,8 +64,10 @@ dot_product :: proc {
 
 clamp :: proc(floor, x, ceil: $T) -> T {
 	switch true {
-	case x < floor: return floor
-	case x > ceil: return ceil
+	case x < floor:
+		return floor
+	case x > ceil:
+		return ceil
 	}
 	return x
 }

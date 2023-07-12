@@ -60,11 +60,18 @@ main :: proc() {
 		cv := &canvas
 		canvas_clear(&canvas)
 		for sdl.PollEvent(&ev) {
+				N : Real : 0.02
 			#partial switch ev.type {
 			case .QUIT:
 				running = false
 			case .KEYDOWN:
 				#partial switch ev.key.keysym.sym {
+				case .h: camera.position.x -= N; paused = false
+				case .l: camera.position.x += N; paused = false
+				case .j: camera.position.y -= N; paused = false
+				case .k: camera.position.y += N; paused = false
+				case .b: camera.position.z -= N; paused = false
+				case .f: camera.position.z += N; paused = false
 				case .q:
 					running = false
 				case .SPACE:

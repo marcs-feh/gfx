@@ -37,7 +37,7 @@ compute_diffuse_light_intensity :: proc(
 	direction: Vec3,
 	intensity: Real,
 ) -> Real {
-	prod := dot_product(direction, normal)
+	prod := dot_product(normal, direction)
 	if prod > 0 {
 		return intensity * prod / (mag(normal) * mag(direction))
 	}
@@ -53,7 +53,7 @@ compute_diffuse_light :: proc(point: Vec3, normal: Vec3, sources: []Light_Source
 			lum += light.intensity
 		case Point_Light:
 			{
-				direction := point - light.position
+				direction := light.position - point
 				lum += compute_diffuse_light_intensity(point, normal, direction, light.intensity)
 			}
 		case Direction_Light:

@@ -1,6 +1,8 @@
 package gfx
 import "core:fmt"
 
+import "core:math"
+
 Camera :: struct {
 	position:      Vec3,
 	vp_width:      Real,
@@ -29,17 +31,25 @@ ray_equation :: proc(origin: Vec3, vp_point: Vec3, t: Real) -> Vec3 {
 ray_sphere_intersect :: proc(cam: Camera, direction: Vec3, sphere: Sphere) -> (t0, t1: Real) {
 	d := direction
 	r := sphere.radius
-	origin := cam.position
+	o := cam.position
 
 	t0 = cam.view_distance + 1
 	t1 = t0
 
-	c0 := origin - sphere.origin
+	co := o - sphere.origin
 
 	{
 		a := dot_product(d, d)
-		b := 2 * dot_product(c0, d)
-		c := dot_product(c0, c0) - (r * r)
+		b := 2 * dot_product(co, d)
+		c := dot_product(co, co) - (r * r)
+
+		// disc := b*b - 4*a*c
+		// if disc < 0 {
+		// 	t0, t1 = 1_000_000, 1_000_000
+		// }
+		//
+		// t0 = (-b + math.sqrt(disc)) / (2*a)
+		// t1 = (-b - math.sqrt(disc)) / (2*a)
 		ans := solve_quadratic(a, b, c)
 		if ans != nil {
 			t0 = (ans.?).x
@@ -71,7 +81,6 @@ trace_ray :: proc(cam: Camera, scene: Scene, dir: Vec3, t_min, t_max: Real) -> C
 		return scene.background
 	}
 
-	// return closest_sphere.color
 	intersection := cam.position + (closest_t * dir)
 	normal := sphere_normal(closest_sphere^, intersection)
 	lum := compute_diffuse_light(intersection, normal, scene.lights[:])

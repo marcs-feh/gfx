@@ -78,7 +78,7 @@ between :: proc(floor, x, ceil: $T) -> bool {
 
 // where sp is a point on the surface of the sphere
 sphere_normal :: proc(sphere: Sphere, sp: Vec3) -> Vec3 {
-	return (sp - sphere.origin) / (mag(sp) - mag(sphere.origin))
+	return (sp - sphere.origin) / mag(sp - sphere.origin)
 }
 
 mag_v2 :: proc(v: Vec2) -> Real {

@@ -1,14 +1,9 @@
 package gfx
 
 
-@(private = "file")
-in_between :: proc(floor, x, ceil: $T) -> bool {
-	return (x >= floor) && (x <= ceil)
-}
-
 put_pixel :: proc(using cv: ^Canvas, x, y: int, col: Color) {
-	if !(in_between(-(width / 2) + 1, x, (width / 2) - 1) &&
-		   in_between(-(height / 2) + 1, y, (height / 2) - 1)) {
+	if !(between(-(width / 2) + 1, x, (width / 2) - 1) &&
+		   between(-(height / 2) + 1, y, (height / 2) - 1)) {
 		return
 	}
 	sx, sy := screen_to_canvas_coord(cv, x, y)

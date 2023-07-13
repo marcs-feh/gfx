@@ -33,7 +33,7 @@ main :: proc() {
 		Sphere{origin = {0, -1, 3}, radius = 1, color = col_from_rgba(0xff, 0x00, 0x00)},
 		Sphere{origin = {2, 0, 4}, radius = 1, color = col_from_rgba(0x00, 0xff, 0x00)},
 		Sphere{origin = {-2, 0, 4}, radius = 1, color = col_from_rgba(0x00, 0x00, 0xff)},
-		// Sphere{origin = {0, -5001, 0}, radius = 5000, color = col_from_rgba(0xff, 0xff, 0x00)},
+		Sphere{origin = {0, -5001, 0}, radius = 5000, color = col_from_rgba(0xff, 0xff, 0x00)},
 	)
 	scene_add(
 		&scene,

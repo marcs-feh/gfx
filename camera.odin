@@ -43,13 +43,6 @@ ray_sphere_intersect :: proc(cam: Camera, direction: Vec3, sphere: Sphere) -> (t
 		b := 2 * dot_product(co, d)
 		c := dot_product(co, co) - (r * r)
 
-		// disc := b*b - 4*a*c
-		// if disc < 0 {
-		// 	t0, t1 = 1_000_000, 1_000_000
-		// }
-		//
-		// t0 = (-b + math.sqrt(disc)) / (2*a)
-		// t1 = (-b - math.sqrt(disc)) / (2*a)
 		ans := solve_quadratic(a, b, c)
 		if ans != nil {
 			t0 = (ans.?).x

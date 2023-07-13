@@ -44,6 +44,7 @@ compute_diffuse_light_intensity :: proc(
 	return 0
 }
 
+
 compute_diffuse_light :: proc(point: Vec3, normal: Vec3, sources: []Light_Source) -> Real {
 	lum: Real
 

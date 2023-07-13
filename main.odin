@@ -16,7 +16,7 @@ main :: proc() {
 	mouse_pos := Vec2i{}
 	target_fps := 45
 	camera := Camera {
-		position = {0,0,0},
+		position = {0, 0, 0},
 		vp_width = 1,
 		vp_height = 1,
 		vp_distance = 1,
@@ -37,8 +37,8 @@ main :: proc() {
 	)
 	scene_add(
 		&scene,
-		Ambient_Light{intensity = 0.1},
-		Point_Light{position = Vec3{2, 3, 0}, intensity = 0.6},
+		Ambient_Light{intensity = 0.05},
+		Point_Light{position = Vec3{2, 3, 0}, intensity = 0.5},
 		Direction_Light{direction = Vec3{1, 4, 4}, intensity = 0.2},
 	)
 
@@ -73,6 +73,12 @@ main :: proc() {
 					camera.position.y += N;paused = false
 				case .b:
 					camera.position.z -= N;paused = false
+				case .e:
+					l := &scene.lights[1].(Point_Light)
+					l.intensity += 0.1;paused = false
+				case .r:
+					l := &scene.lights[1].(Point_Light)
+					l.intensity -= 0.1;paused = false
 				case .f:
 					camera.position.z += N;paused = false
 				case .q:

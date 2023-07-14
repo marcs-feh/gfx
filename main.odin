@@ -7,8 +7,9 @@ import "core:time"
 import sdl "vendor:sdl2"
 
 WIDTH: int : 600
-HEIGHT: int : 600
-SCALE: f32 : 1
+HEIGHT: int : 400
+ASPECT_RATIO :: Real(WIDTH)/Real(HEIGHT)
+SCALE: f32 : 2
 
 main :: proc() {
 	running := true
@@ -17,11 +18,12 @@ main :: proc() {
 	target_fps := 45
 	camera := Camera {
 		position = {0, 0, 0},
-		vp_width = 1,
+		vp_width = ASPECT_RATIO,
 		vp_height = 1,
 		vp_distance = 1,
-		view_distance = 100_000_000,
+		view_distance = 100_000,
 	}
+
 	canvas := canvas_make(WIDTH, HEIGHT)
 	defer canvas_destroy(&canvas)
 
@@ -57,35 +59,39 @@ main :: proc() {
 		cv := &canvas
 		canvas_clear(&canvas)
 		for sdl.PollEvent(&ev) {
-			N: Real : 0.02
+			N: Real : 0.1
 			#partial switch ev.type {
 			case .QUIT:
 				running = false
 			case .KEYDOWN:
 				#partial switch ev.key.keysym.sym {
-				case .h:
-					camera.position.x -= N;paused = false
-				case .l:
-					camera.position.x += N;paused = false
-				case .j:
-					camera.position.y -= N;paused = false
-				case .k:
-					camera.position.y += N;paused = false
-				case .b:
-					camera.position.z -= N;paused = false
-				case .e:
-					l := &scene.lights[1].(Point_Light)
-					l.intensity += 0.1;paused = false
-				case .r:
-					l := &scene.lights[1].(Point_Light)
-					l.intensity -= 0.1;paused = false
-				case .f:
-					camera.position.z += N;paused = false
+				case .w:
+					camera.position.z += N
+				case .a:
+					camera.position.x -= N
+				case .s:
+					camera.position.z -= N
+				case .d:
+					camera.position.x += N
 				case .q:
+					camera.position.y -= N
+				case .e:
+					camera.position.y += N
+				case .x:
 					running = false
+				case .MINUS:
+					camera.vp_height -= 0.1
+					camera.vp_width -= 0.1 * ASPECT_RATIO
+					camera.vp_distance += 0.1
+				case .EQUALS:
+					camera.vp_height += 0.1
+					camera.vp_width += 0.1 * ASPECT_RATIO
+					camera.vp_distance -= 0.1
+
 				case .SPACE:
 					paused = !paused
 				}
+				paused = false
 			case .MOUSEMOTION:
 				mx, my := screen_to_canvas_coord(
 					cv,
@@ -123,7 +129,8 @@ main :: proc() {
 			wait := (time.Millisecond * time.Duration(1000 / target_fps)) - elapsed
 
 			fmt.printf(
-				"\r[ Frame: %8v | Time: %.3fms ]   ",
+				"\rPos: %v [ Frame: %7v | Time: %.3fms ]   ",
+				camera.position,
 				ctx.frame_counter,
 				f64(elapsed) / f64(time.Millisecond),
 			)
